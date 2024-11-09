@@ -10,13 +10,15 @@ async function main() {
   // 1. Mint NFT
   console.log('\n1. Minting NFT...')
   const mintTx = await nft.connect(user1).mintProperty(
+    'Sample Name',
     'Sample Location',
     1000, // area
     'Residential',
-    'ipfs://sample-documents-hash'
+    'ipfs://sample-documents-hash',
+    'ipfs://sample-image-hash'
   )
-  await mintTx.wait()
-  const nftId = 0 // First NFT minted
+  const receiptMintTx = await mintTx.wait()
+  const nftId = (receiptMintTx?.logs[1] as any).args[0]
   console.log('NFT minted with ID:', nftId)
 
   // 2. Approve NFT for FactoryFundraising

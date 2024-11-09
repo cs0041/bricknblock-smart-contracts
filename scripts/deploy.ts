@@ -10,17 +10,25 @@ async function main() {
 
   // 0. Deploy USDT
   console.log('\nDeploying USDT...')
-  const USDT = await ethers.getContractFactory('Token')
+  // const USDT = await ethers.getContractFactory('Token')
   const initialSupply = ethers.parseEther('1000000') // 1 million USDT
-  const usdt = await USDT.deploy(initialSupply)
-  await usdt.waitForDeployment()
+  // const usdt = await USDT.deploy(initialSupply)
+  // await usdt.waitForDeployment()
+  const usdt = await ethers.getContractAt(
+    'Token',
+    '0x776Ded774F25A3f353763aC174A4F4C11a6deC39'
+  )
   console.log('USDT deployed to:', await usdt.getAddress())
 
   // 1. Deploy NFT
   console.log('\nDeploying NFT...')
-  const NFT = await ethers.getContractFactory('RealEstateNFT')
-  const nft = await NFT.deploy()
-  await nft.waitForDeployment()
+  // const NFT = await ethers.getContractFactory('RealEstateNFT')
+  // const nft = await NFT.deploy()
+  // await nft.waitForDeployment()
+    const nft = await ethers.getContractAt(
+      'RealEstateNFT',
+      '0x71353005930B49805df867D75C1610092070F3cc'
+    )
   console.log('NFT deployed to:', await nft.getAddress())
 
   // 2. Deploy PropertyGovernance

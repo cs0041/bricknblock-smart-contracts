@@ -39,27 +39,49 @@ async function main() {
     console.log('New voting power:', ethers.formatEther(votingPowerAfter))
   }
 
-  // Create proposal
-  console.log('\nCreating transfer proposal...')
-  const transferAmount = ethers.parseEther('100000') // 100k USDT
-  const description = 'Proposal: Transfer funds to user2'
-  const proposalType = 2 // TransferFunds type
+    // 3. User2 creates a proposal
+  console.log('\nCreating governance proposal...')
+
+  // Example proposal to transfer funds
+  const description = 'Proposal #1: CreateFundraising 300k'
+  const proposalType = 3 // CreateFundraising type
+  // In frontend using ethers.js
+  const goalAmount2 = ethers.parseEther('300000') // 300k USDT
+  const minInvestment2 = ethers.parseEther('100') // 100 USDT
+  const maxInvestment2 = ethers.parseEther('300000') // 300k USDT
+  const durationDays2 = 30 // 30 days
   const callData = ethers.AbiCoder.defaultAbiCoder().encode(
-    ['address', 'address', 'uint256'],
-    [await usdt.getAddress(), user2.address, transferAmount]
+    ['uint256', 'uint256', 'uint256', 'uint256'],
+    [goalAmount2, minInvestment2, maxInvestment2, durationDays2]
   )
+  const target = ethers.ZeroAddress // No target for this example
 
   const proposeTx = await propertyGovernance
     .connect(user2)
-    .propose(
-      propertyTokenAddress,
-      description,
-      proposalType,
-      callData,
-      ethers.ZeroAddress
-    )
-  const receipt = await proposeTx.wait()
-  const proposalId = receipt?.logs[0].topics[1]
+    .propose(propertyTokenAddress, description, proposalType, callData, target)
+  const receiptProposeTx = await proposeTx.wait()
+
+  // // Create proposal
+  // console.log('\nCreating transfer proposal...')
+  // const transferAmount = ethers.parseEther('100000') // 100k USDT
+  // const description = 'Proposal: Transfer funds to user2'
+  // const proposalType = 2 // TransferFunds type
+  // const callData = ethers.AbiCoder.defaultAbiCoder().encode(
+  //   ['address', 'address', 'uint256'],
+  //   [await usdt.getAddress(), user2.address, transferAmount]
+  // )
+
+  // const proposeTx = await propertyGovernance
+  //   .connect(user2)
+  //   .propose(
+  //     propertyTokenAddress,
+  //     description,
+  //     proposalType,
+  //     callData,
+  //     ethers.ZeroAddress
+  //   )
+ 
+  const proposalId = receiptProposeTx?.logs[0].topics[1]
   console.log('Proposal created with ID:', proposalId)
 }
 

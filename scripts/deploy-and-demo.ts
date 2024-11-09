@@ -113,10 +113,12 @@ async function main() {
   // 1. User1 mints NFT
   console.log('\n1. Minting NFT for User1...')
   const mintTx = await nft.connect(user1).mintProperty(
+    'Sample Name',
     'Sample Location',
     1000, // area
     'Residential',
-    'ipfs://sample-documents-hash'
+    'ipfs://sample-documents-hash',
+    'ipfs://sample-image-hash'
   )
   await mintTx.wait()
   const nftId = 0 // First NFT minted
@@ -625,6 +627,145 @@ async function main() {
     ethers.formatEther(finalTransferProposal.againstVotes)
   )
   console.log('Executed:', finalTransferProposal.executed)
+
+  console.log(
+    '\n--- Starting Demo Part 5: Dividend Distribution and Claims ---'
+  )
+
+  // 1. Mint some USDT for dividend distribution
+  console.log('\n1. Minting USDT for dividend distribution...')
+  const dividendAmount = ethers.parseEther('50000') // 50k USDT for dividends
+  await usdt.mint(user1.address, dividendAmount)
+  console.log(
+    'Minted',
+    ethers.formatEther(dividendAmount),
+    'USDT for dividends'
+  )
+
+  // 2. User1 approves PropertyToken contract to spend USDT
+  console.log('\n2. Approving USDT for dividend distribution...')
+  await usdt.connect(user1).approve(PropertyTokenAddress, dividendAmount)
+  console.log('USDT approved for PropertyToken contract')
+
+  // Print initial balances
+  console.log('\nInitial Balances:')
+  console.log(
+    'User1 USDT:',
+    ethers.formatEther(await usdt.balanceOf(user1.address))
+  )
+  console.log(
+    'User2 USDT:',
+    ethers.formatEther(await usdt.balanceOf(user2.address))
+  )
+  console.log(
+    'User3 USDT:',
+    ethers.formatEther(await usdt.balanceOf(user3.address))
+  )
+
+  console.log('\nDelegating voting power for user2...')
+  await propertyToken.connect(user2).delegate(user2.address)
+  console.log('\nDelegating voting power for user3...')
+  await propertyToken.connect(user3).delegate(user3.address)
+
+  // Check voting power after delegation
+  console.log('\nChecking voting power after delegation:')
+  console.log(
+    'User2 voting power:',
+    ethers.formatEther(await propertyToken.getVotes(user2.address))
+  )
+  console.log(
+    'User3 voting power:',
+    ethers.formatEther(await propertyToken.getVotes(user3.address))
+  )
+  await ethers.provider.send('evm_mine', [])
+
+  // 3. Distribute dividends
+  console.log('\n3. Distributing dividends...')
+  const distributeTx = await propertyToken
+    .connect(user1)
+    .distributeDividends(await usdt.getAddress(), dividendAmount)
+  await distributeTx.wait()
+  console.log('Dividends distributed successfully')
+
+  await ethers.provider.send('evm_mine', [])
+
+  // 4. Get dividend info
+  const dividendInfo = await propertyToken.getDividendInfo(0)
+  console.log('\nDividend Information:')
+  console.log('Amount:', ethers.formatEther(dividendInfo[0]), 'USDT')
+  console.log('Total Supply at Snapshot:', ethers.formatEther(dividendInfo[1]))
+  console.log('Timestamp:', dividendInfo[2])
+  console.log('Token:', dividendInfo[3])
+
+  // 5. Check if users can claim
+  console.log('\nChecking claim eligibility:')
+  const user2CanClaim = await propertyToken.canClaimDividend(user2.address, 0)
+  const user3CanClaim = await propertyToken.canClaimDividend(user3.address, 0)
+  console.log('User2 can claim:', user2CanClaim)
+  console.log('User3 can claim:', user3CanClaim)
+
+  // 6. Users claim their dividends
+  if (user2CanClaim) {
+    console.log('\n6. User2 claiming dividends...')
+    const claimTx2 = await propertyToken.connect(user2).claimDividend(0)
+    await claimTx2.wait()
+    console.log('User2 claimed dividends successfully')
+  }
+
+  if (user3CanClaim) {
+    console.log('\nUser3 claiming dividends...')
+    const claimTx3 = await propertyToken.connect(user3).claimDividend(0)
+    await claimTx3.wait()
+    console.log('User3 claimed dividends successfully')
+  }
+
+  // 7. Print final balances
+  console.log('\nFinal Balances:')
+  console.log(
+    'User1 USDT:',
+    ethers.formatEther(await usdt.balanceOf(user1.address))
+  )
+  console.log(
+    'User2 USDT:',
+    ethers.formatEther(await usdt.balanceOf(user2.address))
+  )
+  console.log(
+    'User3 USDT:',
+    ethers.formatEther(await usdt.balanceOf(user3.address))
+  )
+
+  // 8. Try to claim again (should fail)
+  console.log('\n8. Testing double-claim prevention...')
+  try {
+    await propertyToken.connect(user2).claimDividend(0)
+    console.log('ERROR: Double claim succeeded when it should have failed')
+  } catch (error) {
+    console.log('Successfully prevented double claim (expected)')
+  }
+
+  // 9. Check if users can still claim
+  console.log('\nFinal claim eligibility:')
+  console.log(
+    'User2 can claim:',
+    await propertyToken.canClaimDividend(user2.address, 0)
+  )
+  console.log(
+    'User3 can claim:',
+    await propertyToken.canClaimDividend(user3.address, 0)
+  )
+
+  // 10. Try to distribute invalid amount (should fail)
+  console.log('\n10. Testing invalid dividend distribution...')
+  try {
+    await propertyToken
+      .connect(user1)
+      .distributeDividends(await usdt.getAddress(), 0)
+    console.log(
+      'ERROR: Zero amount distribution succeeded when it should have failed'
+    )
+  } catch (error) {
+    console.log('Successfully prevented zero amount distribution (expected)')
+  }
 }
 
 main()

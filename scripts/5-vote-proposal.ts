@@ -22,12 +22,12 @@ async function main() {
   // Input the proposal ID from the previous script
   const proposalId = '0' // Replace with actual proposal ID
 
-  //   console.log('\nSkipping voting delay...')
-  //   await propertyGovernance
-  //     .connect(user2)
-  //     .skipVotingDelay(propertyTokenAddress, proposalId)
-  //   console.log('Voting delay skipped')
-  //   await delay(5000) // Wait 5 seconds
+  console.log('\nSkipping voting delay...')
+  await propertyGovernance
+    .connect(user2)
+    .skipVotingDelay(propertyTokenAddress, proposalId)
+  console.log('Voting delay skipped')
+  await delay(7000) // Wait 5 seconds
 
   // Cast vote
   console.log('\nCasting vote...')
@@ -47,31 +47,44 @@ async function main() {
   console.log('Against Votes:', ethers.formatEther(proposal.againstVotes))
   console.log('Executed:', proposal.executed)
 
-  //   console.log('\nSkipping to end of voting period...')
-  //   await propertyGovernance.connect(user2).skipVotingPeriod(propertyTokenAddress, proposalId)
-  //   console.log('Voting period skipped')
+  console.log('\nSkipping to end of voting period...')
+  await propertyGovernance
+    .connect(user2)
+    .skipVotingPeriod(propertyTokenAddress, proposalId)
+  console.log('Voting period skipped')
+  await delay(7000) // Wait 5 seconds
 
-  //  // Check if proposal can be executed
-  //  const state = await propertyGovernance.getProposalState(propertyTokenAddress, proposalId)
-  //  console.log('\nFinal proposal state:', state)
+  // Check if proposal can be executed
+  const state = await propertyGovernance.getProposalState(
+    propertyTokenAddress,
+    proposalId
+  )
+  console.log('\nFinal proposal state:', state)
 
-  //  if (state === 2n) { // Succeeded state
-  //    console.log('\nExecuting proposal...')
-  //    const executeTx = await propertyGovernance
-  //      .connect(user2)
-  //      .executeProposal(propertyTokenAddress, proposalId)
-  //    await executeTx.wait()
-  //    console.log('Proposal executed successfully')
+  if (state === 3n) {
+    // Succeeded state
+    console.log('\nExecuting proposal...')
+    const executeTx = await propertyGovernance
+      .connect(user2)
+      .executeProposal(propertyTokenAddress, proposalId)
+    await executeTx.wait()
+    console.log('Proposal executed successfully')
 
-  //    // Get final proposal state
-  //    const finalProposal = await propertyGovernance.getProposal(propertyTokenAddress, proposalId)
-  //    console.log('\nFinal Proposal State:')
-  //    console.log('For Votes:', ethers.formatEther(finalProposal.forVotes))
-  //    console.log('Against Votes:', ethers.formatEther(finalProposal.againstVotes))
-  //    console.log('Executed:', finalProposal.executed)
-  //  } else {
-  //    console.log('\nProposal cannot be executed. State:', state)
-  //  }
+    // Get final proposal state
+    const finalProposal = await propertyGovernance.getProposal(
+      propertyTokenAddress,
+      proposalId
+    )
+    console.log('\nFinal Proposal State:')
+    console.log('For Votes:', ethers.formatEther(finalProposal.forVotes))
+    console.log(
+      'Against Votes:',
+      ethers.formatEther(finalProposal.againstVotes)
+    )
+    console.log('Executed:', finalProposal.executed)
+  } else {
+    console.log('\nProposal cannot be executed. State:', state)
+  }
 }
 
 main()
