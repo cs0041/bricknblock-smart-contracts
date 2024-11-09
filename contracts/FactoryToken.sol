@@ -44,7 +44,7 @@ contract FactoryToken is Ownable {
         string memory name,
         string memory symbol,
         address _fundraisingContract
-    ) external onlyFundraising returns (address token) {
+    ) external onlyFundraising returns (address) {
         bytes32 _salt = keccak256(
             abi.encodePacked(_fundraisingContract, block.timestamp)
         );
