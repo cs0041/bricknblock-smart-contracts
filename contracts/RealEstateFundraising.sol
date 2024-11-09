@@ -39,7 +39,7 @@ contract RealEstateFundraising is ReentrancyGuard, Ownable {
     event TokensClaimed(address indexed investor, uint256 amount);
     event EarlyComplete(uint256 totalRaised);
     event DeadlineExtended(uint256 newDeadline);
-    event PropertyTokenCreated(address tokenAddress);
+    event PropertyTokenCreated(address tokenAddress, uint256 nftId);
     event InvestmentWithdrawn(address indexed investor, uint256 amount);
 
     constructor(
@@ -227,7 +227,7 @@ contract RealEstateFundraising is ReentrancyGuard, Ownable {
             "USDT transfer failed"
         );
 
-        emit PropertyTokenCreated(address(propertyToken));
+        emit PropertyTokenCreated(address(propertyToken), offer.nftId);
         emit FundraisingCompleted(offer.totalRaised);
     }
 

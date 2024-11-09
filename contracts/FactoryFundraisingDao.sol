@@ -18,6 +18,8 @@ contract FactoryFundraisingDao {
 
     event FundraisingDaoCreated(
         address indexed fundraisingDao,
+        address indexed propertyToken,
+        uint256 indexed proposalID,
         uint256 goalAmount,
         uint256 minInvestment,
         uint256 maxInvestment,
@@ -68,6 +70,8 @@ contract FactoryFundraisingDao {
 
         emit FundraisingDaoCreated(
             newAddress,
+            _propertyToken,
+            _proposalID,
             _goalAmount,
             _minInvestment,
             _maxInvestment,

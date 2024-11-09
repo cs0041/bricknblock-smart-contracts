@@ -11,18 +11,19 @@ import "./interface/IFactoryFundraising.sol";
  * @dev Implementation of a Real Estate NFT system
  */
 contract RealEstateNFT is ERC721, AccessControl, ReentrancyGuard {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant VERIFIER_ROLE = keccak256("VERIFIER_ROLE");
+
 
     uint256 private _tokenIds;
     IFactoryFundraising public fundraisingFactory;
 
     // Property details structure
     struct Property {
+        string name; // name of the property
         string location; // Physical location of the property
         uint256 area; // Area in square meters
         string propertyType; // Type of property (e.g., residential, commercial)
         string documents; // IPFS hash of property documents
+        string image; // IPFS of property image
         bool isVerified; // Verification status
         bool isTokenized; // Whether the property has been tokenized
         address propertyToken; //address PropertyToken after tokenized
@@ -49,17 +50,16 @@ contract RealEstateNFT is ERC721, AccessControl, ReentrancyGuard {
 
     constructor() ERC721("Real Estate NFT", "RENFT") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
-        _grantRole(VERIFIER_ROLE, msg.sender);
     }
 
     function mintProperty(
+        string memory name,
         string memory location,
         uint256 area,
         string memory propertyType,
-        string memory documents
+        string memory documents,
+        string memory image
     ) public nonReentrant returns (uint256) {
-        // require(hasRole(MINTER_ROLE, msg.sender), "Must have minter role");
         require(bytes(location).length > 0, "Location cannot be empty");
         require(area > 0, "Area must be greater than 0");
 
@@ -67,10 +67,12 @@ contract RealEstateNFT is ERC721, AccessControl, ReentrancyGuard {
 
         // Create new property
         properties[newTokenId] = Property({
+            name:name,
             location: location,
             area: area,
             propertyType: propertyType,
             documents: documents,
+            image: image,
             isVerified: false,
             isTokenized: false,
             propertyToken: address(0),
@@ -85,7 +87,6 @@ contract RealEstateNFT is ERC721, AccessControl, ReentrancyGuard {
     }
 
     function verifyProperty(uint256 tokenId) external {
-        require(hasRole(VERIFIER_ROLE, msg.sender), "Must have verifier role");
         require(_ownerOf(tokenId) != address(0), "Property does not exist");
         require(!properties[tokenId].isVerified, "Property already verified");
 

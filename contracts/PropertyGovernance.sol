@@ -266,7 +266,6 @@ contract PropertyGovernance is Ownable {
         view
         onlyPropertyToken(propertyToken)
         returns (
-            uint256 id,
             address proposer,
             string memory description,
             uint256 startTime,
@@ -275,12 +274,12 @@ contract PropertyGovernance is Ownable {
             uint256 againstVotes,
             bool executed,
             ProposalType proposalType,
-            address target
+            address target,
+            bytes memory callData
         )
     {
         Proposal storage proposal = proposals[propertyToken][proposalId];
         return (
-            proposal.id,
             proposal.proposer,
             proposal.description,
             proposal.startTime,
@@ -289,7 +288,8 @@ contract PropertyGovernance is Ownable {
             proposal.againstVotes,
             proposal.executed,
             proposal.proposalType,
-            proposal.target
+            proposal.target,
+            proposal.callData
         );
     }
 
