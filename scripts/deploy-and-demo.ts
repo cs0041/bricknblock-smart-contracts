@@ -684,13 +684,16 @@ async function main() {
   const distributeTx = await propertyToken
     .connect(user1)
     .distributeDividends(await usdt.getAddress(), dividendAmount)
-  await distributeTx.wait()
+    const distributeReceiptTx = await distributeTx.wait()
+ 
+  const distributeId = (distributeReceiptTx?.logs[1] as any).args[0]
+  console.log('Dividends distributed with ID:', distributeId)
   console.log('Dividends distributed successfully')
 
   await ethers.provider.send('evm_mine', [])
 
   // 4. Get dividend info
-  const dividendInfo = await propertyToken.getDividendInfo(0)
+  const dividendInfo = await propertyToken.getDividendInfo(distributeId!)
   console.log('\nDividend Information:')
   console.log('Amount:', ethers.formatEther(dividendInfo[0]), 'USDT')
   console.log('Total Supply at Snapshot:', ethers.formatEther(dividendInfo[1]))
@@ -699,22 +702,26 @@ async function main() {
 
   // 5. Check if users can claim
   console.log('\nChecking claim eligibility:')
-  const user2CanClaim = await propertyToken.canClaimDividend(user2.address, 0)
-  const user3CanClaim = await propertyToken.canClaimDividend(user3.address, 0)
+  const user2CanClaim = await propertyToken.canClaimDividend(user2.address, distributeId!)
+  const user3CanClaim = await propertyToken.canClaimDividend(user3.address, distributeId!)
   console.log('User2 can claim:', user2CanClaim)
   console.log('User3 can claim:', user3CanClaim)
 
   // 6. Users claim their dividends
   if (user2CanClaim) {
     console.log('\n6. User2 claiming dividends...')
-    const claimTx2 = await propertyToken.connect(user2).claimDividend(0)
+    const claimTx2 = await propertyToken
+      .connect(user2)
+      .claimDividend(distributeId!)
     await claimTx2.wait()
     console.log('User2 claimed dividends successfully')
   }
 
   if (user3CanClaim) {
     console.log('\nUser3 claiming dividends...')
-    const claimTx3 = await propertyToken.connect(user3).claimDividend(0)
+    const claimTx3 = await propertyToken
+      .connect(user3)
+      .claimDividend(distributeId!)
     await claimTx3.wait()
     console.log('User3 claimed dividends successfully')
   }

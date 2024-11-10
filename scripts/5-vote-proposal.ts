@@ -52,7 +52,7 @@ async function main() {
     .connect(user2)
     .skipVotingPeriod(propertyTokenAddress, proposalId)
   console.log('Voting period skipped')
-  await delay(7000) // Wait 5 seconds
+  await delay(10000) // Wait 10 seconds
 
   // Check if proposal can be executed
   const state = await propertyGovernance.getProposalState(
