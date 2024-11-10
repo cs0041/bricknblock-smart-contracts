@@ -2,6 +2,17 @@
 
 Brick'NBlock is a comprehensive system for tokenizing real world assets using NFTs and facilitating fundraising through ERC20 tokens. The system is built on the Ethereum blockchain using Solidity and leverages OpenZeppelin libraries for security and standardization.
 
+## Deployed Contracts
+
+Here are the addresses of the deployed contracts on the Binance Smart Chain testnet:
+
+- **USDT**: [0x776Ded774F25A3f353763aC174A4F4C11a6deC39](https://testnet.bscscan.com/address/0x776Ded774F25A3f353763aC174A4F4C11a6deC39)
+- **NFT**: [0x71353005930B49805df867D75C1610092070F3cc](https://testnet.bscscan.com/address/0x71353005930B49805df867D75C1610092070F3cc)
+- **PropertyGovernance**: [0x60962143Ea130bb806e4E4f89c2580f6A31f457A](https://testnet.bscscan.com/address/0x60962143Ea130bb806e4E4f89c2580f6A31f457A)
+- **FactoryFundraisingDao**: [0x145737D4641da44a76b846b6bc26cE037c19e391](https://testnet.bscscan.com/address/0x145737D4641da44a76b846b6bc26cE037c19e391)
+- **FactoryToken**: [0xf64593Ff0cD457293D3400DD1F8C949F010e11d8](https://testnet.bscscan.com/address/0xf64593Ff0cD457293D3400DD1F8C949F010e11d8)
+- **FactoryFundraising**: [0xB34e3DA3e1Cb266Ad048693b3CD9a1eff3850Bc2](https://testnet.bscscan.com/address/0xB34e3DA3e1Cb266Ad048693b3CD9a1eff3850Bc2)
+
 ## Contracts Overview
 
 ### 1. RealEstateNFT.sol (Real World Asset NFT)
