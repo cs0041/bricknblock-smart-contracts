@@ -14,9 +14,10 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
 - **FactoryFundraising**: [0xB34e3DA3e1Cb266Ad048693b3CD9a1eff3850Bc2](https://testnet.bscscan.com/address/0xB34e3DA3e1Cb266Ad048693b3CD9a1eff3850Bc2)
 
 ## Contracts Overview
+This suite of smart contracts facilitates a decentralized platform for real estate-related activities. The platform includes tokenization of properties, fundraising mechanisms, governance, and DAO functionalities.
 
 ### 1. RealEstateNFT.sol (Real World Asset NFT)
-
+Implements Non-Fungible Tokens (NFTs) to represent unique real estate assets within the platform, offering ownership and transfer functionalities
 - **Purpose**: Manages the creation and verification of real world asset NFTs.
 - **Key Features**:
   - **Minting Properties**:
@@ -31,7 +32,7 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
     - `setIFactoryFundraising`: Sets the address of the fundraising factory, restricted to admin role.
 
 ### 2. FactoryFundraisingDao.sol
-
+Manages DAO-specific fundraising initiatives. This contract provides the functionality for decentralized decision-making in fundraising operations.
 - **Purpose**: Factory contract for creating `RealEstateFundraisingDao` contracts.
 - **Key Features**:
   - **DAO Creation**:
@@ -40,7 +41,7 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
     - `getAllFundraisingsDaoByPropertyToken`: Retrieves all DAO fundraising contracts associated with a property token.
 
 ### 3. RealEstateFundraisingDao.sol
-
+A DAO-oriented contract that focuses on decentralized fundraising operations, with governance capabilities integrated for decision-making.
 - **Purpose**: Manages DAO-based fundraising for a property token.
 - **Key Features**:
   - **Investment Handling**:
@@ -52,7 +53,7 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
     - `claimTokens`: Allows investors to claim their property tokens after fundraising completion.
 
 ### 4. FactoryFundraising.sol
-
+Handles the creation and management of fundraising campaigns for real estate assets. This contract enables the deployment of individual fundraising instances.
 - **Purpose**: Factory contract for creating `RealEstateFundraising` contracts.
 - **Key Features**:
   - **Fundraising Creation**:
@@ -61,7 +62,7 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
     - `getNFTFundraising`: Retrieves the fundraising contract associated with a specific NFT.
 
 ### 5. RealEstateFundraising.sol
-
+Supports fundraising campaigns specifically targeted at real estate projects. It enables users to contribute funds and receive tokens in exchange.
 - **Purpose**: Manages the fundraising process for a specific real world asset NFT.
 - **Key Features**:
   - **Investment Handling**:
@@ -73,7 +74,7 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
     - `claimTokens`: Allows investors to claim their property tokens after fundraising completion.
 
 ### 6. PropertyToken.sol
-
+Defines the token structure used to represent fractional ownership of properties. This contract is central to tokenizing real estate assets.
 - **Purpose**: Represents a tokenized property with governance and dividend distribution capabilities.
 - **Key Features**:
   - **Minting**:
@@ -87,7 +88,7 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
     - `transferDaoFunds`: Allows the governance contract to transfer funds.
 
 ### 7. PropertyGovernance.sol
-
+Provides governance mechanisms for tokenized properties, including voting and proposal management for property-related decisions.
 - **Purpose**: Manages governance proposals and voting for property tokens.
 - **Key Features**:
   - **Proposal Management**:
@@ -99,7 +100,7 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
     - `getProposalState`: Retrieves the current state of a proposal.
 
 ### 8. FactoryToken.sol
-
+Facilitates the creation and management of tokens representing real estate propertie
 - **Purpose**: Factory contract for creating `PropertyToken` contracts.
 - **Key Features**:
   - **Token Creation**:
@@ -110,19 +111,13 @@ Here are the addresses of the deployed contracts on the Binance Smart Chain test
     - `onlyFundraising`: Modifier to restrict functions to be called only by authorized fundraising contracts.
 
 ### 9. USDT.sol
-
+A mock implementation of a stablecoin (USDT) used for transactions within the platform. This contract can be replaced or integrated with actual stablecoins.
 - **Purpose**: Implements a basic ERC20 token named USDT.
 - **Key Features**:
   - **Token Minting**:
     - `mint`: Allows minting of new tokens to a specified account.
   - **Standard ERC20 Functions**: Inherits from OpenZeppelin's ERC20, providing standard functionalities like transfer, approve, etc.
 
-### 10. ReentrancyGuard.sol
-
-- **Purpose**: Provides a reentrancy guard to prevent reentrant calls to functions.
-- **Key Features**:
-  - **Reentrancy Protection**:
-    - `nonReentrant`: Modifier to protect functions from reentrancy attacks.
 
 ## Interfaces
 
